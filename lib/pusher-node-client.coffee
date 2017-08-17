@@ -22,7 +22,9 @@ class PusherClient extends EventEmitter
 
   subscribe: (channel_name, channel_data = {}) =>
     stringToSign = "#{@state.socket_id}:#{channel_name}:#{JSON.stringify(channel_data)}"
-    auth = @credentials.key + ':' + crypto.createHmac('sha256', @credentials.secret).update(stringToSign).digest('hex');
+    if @credentials.key
+      auth = @credentials.key + ':' + crypto.createHmac('sha256', @credentials.secret).update(stringToSign).digest('hex');
+      
     req = 
       id: uuid.v1()
       event: "pusher:subscribe"
